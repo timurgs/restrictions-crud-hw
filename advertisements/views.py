@@ -1,10 +1,10 @@
 from django.contrib.auth.models import User
-from django_filters import DateFromToRangeFilter, FilterSet, ModelChoiceFilter
+from django_filters import DateFromToRangeFilter, FilterSet, ModelChoiceFilter, ChoiceFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
-from advertisements.models import Advertisement
+from advertisements.models import Advertisement, AdvertisementStatusChoices
 from advertisements.permissions import IsOwner
 from advertisements.serializers import AdvertisementSerializer
 
@@ -13,10 +13,11 @@ class FilterDate(FilterSet):
     created_at = DateFromToRangeFilter()
     updated_at = DateFromToRangeFilter()
     creator = ModelChoiceFilter(queryset=User.objects.all())
+    status = ChoiceFilter(choices=AdvertisementStatusChoices.choices)
 
     class Meta:
         model = Advertisement
-        fields = ['created_at', 'updated_at', 'creator']
+        fields = ['created_at', 'updated_at', 'creator', 'status']
 
 
 class AdvertisementViewSet(ModelViewSet):
